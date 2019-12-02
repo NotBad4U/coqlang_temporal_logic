@@ -82,3 +82,9 @@ auto.
 apply H1.
 Qed.
 
+(* Transitivity on order relation of TL □□p → □p *)
+Theorem globally_trans: forall p t valuation, (eval (Globally (Globally p)) t valuation) -> (eval (Globally p) t valuation).
+Proof.
+simpl;intros.
+apply H.
+Qed.
