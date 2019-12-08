@@ -48,43 +48,42 @@ match F with
 | Atom p => valuation p
 | And a b => (eval a t valuation) /\ (eval b t valuation)
 | Not p => not (eval p t valuation)
-| Globally p => (forall t' , t' >= t /\ (eval p t' valuation))
-| Future p => (exists t' , t' >= t /\ (eval p t' valuation))
+| Globally p => (forall t' , t' >= t -> (eval p t' valuation))
+| Future p => (exists t' , t' >= t -> (eval p t' valuation))
 | Next p => (eval p (S t) valuation)
 end.
 
-(* Transitivity on order relation of TL ◇◇p → ◇p *)
-Theorem future_trans: forall p t valuation, (eval (Future (Future p)) t valuation) -> (eval (Future p) t valuation).
-Proof.
-simpl;intros.
-inversion H.
-destruct H0.
-inversion H1.
-destruct H2.
-exists x0.
-split.
-omega.
-apply H3.
-Qed.
 
 (* Transitivity on order relation of TL ◇p → ◇◇p *)
 Theorem future_trans2: forall p t valuation, (eval (Future p) t valuation) -> (eval (Future (Future p)) t valuation).
 Proof.
 simpl;intros.
 inversion H.
-destruct H0.
 exists x.
-intros; split.
+intros.
+exists x.
+intros.
 apply H0.
-exists x.
-intros; split.
-auto.
-apply H1.
+assumption.
 Qed.
+
 
 (* Transitivity on order relation of TL □□p → □p *)
 Theorem globally_trans: forall p t valuation, (eval (Globally (Globally p)) t valuation) -> (eval (Globally p) t valuation).
 Proof.
-simpl;intros.
-apply H.
+  simpl.
+  intros p t val H.
+  apply H.
+  omega.
+Qed.
+
+
+(* Transitivity on order relation of TL □p → □□p *)
+Theorem globally_trans2: forall p t valuation, (eval (Globally p) t valuation) -> (eval (Globally (Globally p)) t valuation).
+Proof.
+  intros p t val H.
+  simpl.
+  intros.
+  apply H.
+  omega.
 Qed.
