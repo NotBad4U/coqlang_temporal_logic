@@ -50,7 +50,7 @@ match F with
 | Not p => not (eval p t valuation)
 | Globally p => (forall t' , t' >= t -> (eval p t' valuation))
 | Future p => (exists t' , t' >= t /\ (eval p t' valuation))
-| Next p => (eval p (S t) valuation)
+| Next p => (eval p (t + 1) valuation)
 end.
 
 
@@ -103,4 +103,30 @@ Proof.
   intros.
   apply H.
   omega.
+Qed.
+
+(* Distributivity on next ◯(p ∨ q) → ◯p ∨ ◯q *)
+Theorem next_distributivity_1: forall p q t valuation, (eval (Next (Or p q)) t valuation) -> (eval (Or (Next p) (Next q)) t valuation).
+Proof.
+simpl.
+intros p q t val H.
+assumption.
+Qed.
+
+(* Distributivity on next ◯p ∨ ◯q → ◯(p ∨ q) *)
+Theorem next_distributivity_2: forall p q t valuation, (eval (Or (Next p) (Next q)) t valuation) -> (eval (Next (Or p q)) t valuation).
+Proof.
+simpl.
+intros.
+assumption.
+Qed.
+
+(* Distributivity on next ◯(p ∨ q) ≡ ◯p ∨ ◯q *)
+Theorem next_distributivity: forall p q t valuation, (eval (Next (Or p q)) t valuation) <-> (eval (Or (Next p) (Next q)) t valuation).
+Proof.
+simpl.
+intros.
+split.
+apply next_distributivity_1.
+apply next_distributivity_2.
 Qed.
