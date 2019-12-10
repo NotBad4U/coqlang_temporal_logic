@@ -128,53 +128,6 @@ simpl.
 intros.
 split.
 apply next_distributivity_1.
-appl
-(* equiv globally *)
-
-(* □p → ¬◇¬p *)
-Theorem dual_nnpp_1: forall p t valuation, (eval (Globally p) t valuation) -> not (eval (Not (Future p)) t valuation).
-Proof.
-admit.
-Admitted.
-
-
-(* ¬◇¬p → □p *)
-Theorem dual_nnpp_2: forall p t valuation, not (eval (Not (Future p)) t valuation) -> (eval (Globally p) t valuation).
-Proof.
-admit.
-Admitted.
-
-(* NNPP □p ≡ ¬◇¬p *)
-Theorem nnpp: forall p t valuation, (eval (Globally p) t valuation) = not (eval (Not (Future p)) t valuation).
-Proof.
-admit.
-Admitted.
-
-(* equiv future *)
-
-(* ◇p → ¬□¬p *)
-Theorem dual_future_1: forall p t valuation, (eval (Future p) t valuation) -> not (eval (Not (Globally p)) t valuation).
-Proof.
-admit.
-Admitted.
-
-(* ¬□¬p → ◇p *)
-Theorem dual_future_2: forall p t valuation, not (eval (Not (Globally p)) t valuation) -> (eval (Future p) t valuation).
-Proof.
-admit.
-Admitted.
-
-(* ◇p ≡ ¬□¬p *)
-Theorem dual_future: forall p t valuation, (eval (Future p) t valuation) = not (eval (Not (Globally p)) t valuation).
-Proof.
-admit.
-Admitted.
-
-(* leads □p → ◇p *)
-Theorem leads: forall p t valuation, (eval (Globally p) t valuation) -> (eval (Future p) t valuation).
-Proof.
-admit.
-Admitted.y next_distributivity_2.
 Qed.
 
 (* equiv globally *)
