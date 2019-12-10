@@ -29,7 +29,6 @@ Definition Equiv a b := And (Impl a b) (Impl b a).
 A temporal model for a set of atomic propositions PROP is a triple M=⟨T,≺,V⟩,
 where ⟨T,≺⟩ is a temporal frame and V is a valuation assigning to every p∈PROP a set of time instants
 V(p)⊆T at which p is declared true.
-
 Equivalently, an interpretation of PROP in T is a mapping I : T × PROP → {true, false}
 which assigns a truth value to each atomic proposition at each time instant in the temporal frame.
 The truth of a formula of TL at a given time instant t
@@ -50,43 +49,56 @@ match F with
 | Not p => not (eval p t valuation)
 | Globally p => (forall t' , t' >= t -> (eval p t' valuation))
 | Future p => (exists t' , t' >= t /\ (eval p t' valuation))
+(* Since ¬◇¬p =def □p then:
+  eval (Not (Globally (Not p))) t evaluation
+  ⟺ not (eval (Globally (Not p)) t evaluation)
+  ⟺ not (forall t',  t'>=t -> (eval (Not p) t' valuation))
+  ⟺ exists t', not(t'>=t -> (eval (Not p) t' valuation))
+  ⟺ exists t', not(not(t'>=t) \/ (eval (Not p) t' valuation))
+  ⟺ exists t', t'>=t /\ not(eval (Not p) t' valuation)
+  ⟺ exists t', t'>=t /\ not(not(eval p t' valuation))
+  ⟺ exists t', t'>=t /\ eval p t' valuation
+ *)
 | Next p => (eval p (t + 1) valuation)
 end.
 
 
 (* Transitivity on order relation of TL ◇◇p → ◇p *)
-Theorem future_trans: forall p t valuation, (eval (Future (Future p)) t valuation) -> (eval (Future p) t valuation).
+Theorem future_trans: forall p t valuation,
+    (eval (Future (Future p)) t valuation) -> (eval (Future p) t valuation).
 Proof.
-simpl;intros.
-inversion H.
-destruct H0.
-inversion H1.
-destruct H2.
-exists x0.
-split.
-omega.
-apply H3.
+  simpl;intros.
+  inversion H.
+  destruct H0.
+  inversion H1.
+  destruct H2.
+  exists x0.
+  split.
+  omega.
+  apply H3.
 Qed.
 
 
 (* Transitivity on order relation of TL ◇p → ◇◇p *)
-Theorem future_trans2: forall p t valuation, (eval (Future p) t valuation) -> (eval (Future (Future p)) t valuation).
+Theorem future_trans2: forall p t valuation,
+    (eval (Future p) t valuation) -> (eval (Future (Future p)) t valuation).
 Proof.
-simpl;intros.
-inversion H.
-destruct H0.
-exists x.
-intros; split.
-apply H0.
-exists x.
-intros; split.
-auto.
-apply H1.
+  simpl;intros.
+  inversion H.
+  destruct H0.
+  exists x.
+  intros; split.
+  apply H0.
+  exists x.
+  intros; split.
+  auto.
+  apply H1.
 Qed.
 
 
 (* Transitivity on order relation of TL □□p → □p *)
-Theorem globally_trans: forall p t valuation, (eval (Globally (Globally p)) t valuation) -> (eval (Globally p) t valuation).
+Theorem globally_trans: forall p t valuation,
+    (eval (Globally (Globally p)) t valuation) -> (eval (Globally p) t valuation).
 Proof.
   simpl.
   intros p t val H.
@@ -96,7 +108,8 @@ Qed.
 
 
 (* Transitivity on order relation of TL □p → □□p *)
-Theorem globally_trans2: forall p t valuation, (eval (Globally p) t valuation) -> (eval (Globally (Globally p)) t valuation).
+Theorem globally_trans2: forall p t valuation,
+    (eval (Globally p) t valuation) -> (eval (Globally (Globally p)) t valuation).
 Proof.
   intros p t val H.
   simpl.
@@ -106,29 +119,32 @@ Proof.
 Qed.
 
 (* Distributivity on next ◯(p ∨ q) → ◯p ∨ ◯q *)
-Theorem next_distributivity_1: forall p q t valuation, (eval (Next (Or p q)) t valuation) -> (eval (Or (Next p) (Next q)) t valuation).
+Theorem next_distributivity_1: forall p q t valuation,
+    (eval (Next (Or p q)) t valuation) -> (eval (Or (Next p) (Next q)) t valuation).
 Proof.
-simpl.
-intros p q t val H.
-assumption.
+  simpl.
+  intros p q t val H.
+  assumption.
 Qed.
 
 (* Distributivity on next ◯p ∨ ◯q → ◯(p ∨ q) *)
-Theorem next_distributivity_2: forall p q t valuation, (eval (Or (Next p) (Next q)) t valuation) -> (eval (Next (Or p q)) t valuation).
+Theorem next_distributivity_2: forall p q t valuation,
+    (eval (Or (Next p) (Next q)) t valuation) -> (eval (Next (Or p q)) t valuation).
 Proof.
-simpl.
-intros.
-assumption.
+  simpl.
+  intros.
+  assumption.
 Qed.
 
 (* Distributivity on next ◯(p ∨ q) ≡ ◯p ∨ ◯q *)
-Theorem next_distributivity: forall p q t valuation, (eval (Next (Or p q)) t valuation) <-> (eval (Or (Next p) (Next q)) t valuation).
+Theorem next_distributivity: forall p q t valuation,
+    (eval (Next (Or p q)) t valuation) <-> (eval (Or (Next p) (Next q)) t valuation).
 Proof.
-simpl.
-intros.
-split.
-apply next_distributivity_1.
-appl
+  simpl.
+  intros.
+  split.
+  apply next_distributivity_1.
+  apply 
 (* equiv globally *)
 
 (* □p → ¬◇¬p *)
