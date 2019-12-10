@@ -128,6 +128,7 @@ simpl.
 intros.
 split.
 apply next_distributivity_1.
+apply next_distributivity_2.
 Qed.
 
 (* equiv globally *)
