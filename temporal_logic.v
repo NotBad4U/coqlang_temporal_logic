@@ -131,6 +131,43 @@ apply next_distributivity_1.
 apply next_distributivity_2.
 Qed.
 
+(* Distributivity on globally □(p ∧ q) → □p ∧ □q *)
+Theorem distributivity_globally_1: forall p q t valuation, (eval (Globally (And p q)) t valuation) -> (eval (And (Globally p) (Globally q)) t valuation).
+Proof.
+simpl.
+intros p q t val H.
+split.
+intros.
+apply H.
+apply H0.
+intros.
+apply H.
+apply H0.
+Qed.
+
+(* Distributivity on globally □p ∧ □q → □(p ∧ q) *)
+Theorem distributivity_globally_2: forall p q t valuation, (eval (And (Globally p) (Globally q)) t valuation) -> (eval (Globally (And p q)) t valuation).
+Proof.
+simpl.
+split.
+intros.
+apply H.
+apply H0.
+intros.
+apply H.
+apply H0.
+Qed.
+
+(* Distributivity on globally □(p ∧ q) ≡ □p ∧ □q *)
+Theorem distributivity_globally: forall p q t valuation,  (eval (Globally (And p q)) t valuation) <-> (eval (And (Globally p) (Globally q)) t valuation).
+Proof.
+intros.
+split.
+apply distributivity_globally_1.
+apply distributivity_globally_2.
+Qed.
+
+
 (* equiv globally *)
 
 (* □p → ¬◇¬p *)
