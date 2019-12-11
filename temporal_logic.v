@@ -43,6 +43,7 @@ M,t ⊨Gφ iff M,t'⊨φ for all time instants t' such that t≺t';
 M,t ⊨Xφ iff M,succ(t) ⊨ φ;
 M,t ⊨Fϕ iff M,h,t′⊨ϕ for some t' ∈ h such that t≺t'.
 *)
+
 Fixpoint eval (F :LTTerm) (t :nat) (valuation : TemporalFrame -> Prop) {struct F} : Prop :=
 match F with
 | Atom p => valuation p
@@ -52,6 +53,23 @@ match F with
 | Future p => (exists t' , t' >= t /\ (eval p t' valuation))
 | Next p => (eval p (t + 1) valuation)
 end.
+
+(*
+  Since ¬□¬p can be expressed by its dual ◇p, the Future evaluation 
+  can be expressed thanks to the Globally and the Not evaluation. 
+  This is illustrated by the following transformations and inductions:
+     
+  eval (Future p) t evaluation   
+  ⟺ not (eval (Globally (Not p)) t evaluation)                  [Equivalence]
+  ⟺ not (forall t',  t'>=t -> (eval (Not p) t' valuation))      [Induction]
+  ⟺ exists t', not(t'>=t -> (eval (Not p) t' valuation))        [Forall-Not]
+  ⟺ exists t', not(not(t'>=t) \/ (eval (Not p) t' valuation))   [Equivalence]
+  ⟺ exists t', t'>=t /\ not(eval (Not p) t' valuation)          [Not distribution]
+  ⟺ exists t', t'>=t /\ not(not(eval p t' valuation))           [Induction]
+  ⟺ exists t', t'>=t /\ eval p t' valuation                     [DoubleNot*]
+
+  * This is possible since not works on boolean which relies on the law of excluded middle.
+*)                
 
 
 (* Transitivity on order relation of TL ◇◇p → ◇p *)
