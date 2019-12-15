@@ -189,26 +189,25 @@ Qed.
 (* equiv globally *)
 
 (* □p → ¬◇¬p *)
-Theorem dual_nnpp_1: forall p t valuation, (eval (Globally p) t valuation) -> not (eval (Not (Future p)) t valuation).
+Theorem dual_nnpp_1: forall p t valuation, (eval (Globally p) t valuation) -> not (eval (Future (Not p)) t valuation).
 Proof.
 simpl.
 intros p t valuation H H0.
-apply H0.
-exists t.
-split.
-omega.
+inversion H0.
+destruct H1.
+apply H2.
 apply H.
-omega.
+assumption.
 Qed.
 
 (* ¬◇¬p → □p *)
-Theorem dual_nnpp_2: forall p t valuation, not (eval (Not (Future p)) t valuation) -> (eval (Globally p) t valuation).
+Theorem dual_nnpp_2: forall p t valuation, not (eval (Future (Not p)) t valuation) -> (eval (Globally p) t valuation).
 Proof.
 admit.
 Admitted.
 
 (* NNPP □p ≡ ¬◇¬p *)
-Theorem nnpp: forall p t valuation, (eval (Globally p) t valuation) = not (eval (Not (Future p)) t valuation).
+Theorem nnpp: forall p t valuation, (eval (Globally p) t valuation) <-> not (eval (Future (Not p)) t valuation).
 Proof.
 admit.
 Admitted.
