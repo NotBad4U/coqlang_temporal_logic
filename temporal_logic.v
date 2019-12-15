@@ -215,19 +215,19 @@ Admitted.
 (* equiv future *)
 
 (* ◇p → ¬□¬p *)
-Theorem dual_future_1: forall p t valuation, (eval (Future p) t valuation) -> not (eval (Not (Globally p)) t valuation).
+Theorem dual_future_1: forall p t valuation, (eval (Future p) t valuation) -> not (eval (Globally (Not p)) t valuation).
 Proof.
 admit.
 Admitted.
 
 (* ¬□¬p → ◇p *)
-Theorem dual_future_2: forall p t valuation, not (eval (Not (Globally p)) t valuation) -> (eval (Future p) t valuation).
+Theorem dual_future_2: forall p t valuation, not (eval (Globally (Not p)) t valuation) -> (eval (Future p) t valuation).
 Proof.
 admit.
 Admitted.
 
 (* ◇p ≡ ¬□¬p *)
-Theorem dual_future: forall p t valuation, (eval (Future p) t valuation) = not (eval (Not (Globally p)) t valuation).
+Theorem dual_future: forall p t valuation, (eval (Future p) t valuation) = not (eval (Globally (Not p)) t valuation).
 Proof.
 admit.
 Admitted.
